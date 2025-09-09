@@ -1,0 +1,145 @@
+@model List<BlogPost>
+@{
+    ViewData["Title"] = "Blog Yönetimi";
+    Layout = "_AdminLayout";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Blog Yönetimi</h2>
+    <a href="@Url.Action("CreateBlog", "Admin")" class="btn btn-primary">
+        <i class="fas fa-plus me-2"></i>Yeni Blog Yazısı
+    </a>
+</div>
+
+@if (Model.Any())
+{
+    <div class="card">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Resim</th>
+                            <th>Başlık</th>
+                            <th>Durum</th>
+                            <th>Görüntülenme</th>
+                            <th>Tarih</th>
+                            <th>İşlemler</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var blog in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @if (!string.IsNullOrEmpty(blog.ImageUrl))
+                                    {
+                                        <img src="@blog.ImageUrl" alt="@blog.Title" class="img-thumbnail" style="width: 60px; height: 60px; object-fit: cover;">
+                                    }
+                                    else
+                                    {
+                                        <div class="bg-light d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
+                                            <i class="fas fa-image text-muted"></i>
+                                        </div>
+                                    }
+                                </td>
+                                <td>
+                                    <strong>@blog.Title</strong>
+                                    @if (!string.IsNullOrEmpty(blog.Summary))
+                                    {
+                                        <br><small class="text-muted">@blog.Summary</small>
+                                    }
+                                </td>
+                                <td>
+                                    @if (blog.IsActive)
+                                    {
+                                        <span class="badge bg-success">Aktif</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-secondary">Pasif</span>
+                                    }
+                                </td>
+                                <td>
+                                    <i class="fas fa-eye me-1"></i>@blog.ViewCount
+                                </td>
+                                <td>
+                                    <small>
+                                        @blog.CreatedDate.ToString("dd.MM.yyyy")
+                                        @if (blog.UpdatedDate.HasValue)
+                                        {
+                                            <br><span class="text-muted">Güncellendi: @blog.UpdatedDate.Value.ToString("dd.MM.yyyy")</span>
+                                        }
+                                    </small>
+                                </td>
+                                <td>
+                                    <div class="btn-group" role="group">
+                                        <a href="@Url.Action("BlogDetail", "Home", new { id = blog.Id })" 
+                                           class="btn btn-sm btn-outline-info" target="_blank" title="Görüntüle">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        <a href="@Url.Action("EditBlog", "Admin", new { id = blog.Id })" 
+                                           class="btn btn-sm btn-outline-primary" title="Düzenle">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <button type="button" class="btn btn-sm btn-outline-danger" 
+                                                onclick="deleteBlog(@blog.Id, '@blog.Title')" title="Sil">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="card">
+        <div class="card-body text-center py-5">
+            <i class="fas fa-blog fa-5x text-muted mb-4"></i>
+            <h4>Henüz blog yazısı yok</h4>
+            <p class="text-muted">İlk blog yazınızı oluşturmak için yukarıdaki butonu kullanın.</p>
+            <a href="@Url.Action("CreateBlog", "Admin")" class="btn btn-primary">
+                <i class="fas fa-plus me-2"></i>İlk Blog Yazısını Oluştur
+            </a>
+        </div>
+    </div>
+}
+
+<!-- Delete Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Blog Yazısını Sil</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>Bu blog yazısını silmek istediğinizden emin misiniz?</p>
+                <p><strong id="blogTitle"></strong></p>
+                <p class="text-danger"><small>Bu işlem geri alınamaz!</small></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+                <form id="deleteForm" method="post" style="display: inline;">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="btn btn-danger">Sil</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function deleteBlog(id, title) {
+            document.getElementById('blogTitle').textContent = title;
+            document.getElementById('deleteForm').action = '@Url.Action("DeleteBlog", "Admin")/' + id;
+            new bootstrap.Modal(document.getElementById('deleteModal')).show();
+        }
+    </script>
+}

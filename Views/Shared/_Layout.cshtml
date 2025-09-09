@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Sadıçlarsan Havalandırma</title>
+    @await Html.PartialAsync("_SeoHead")
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/custom.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="~/SadiclarasanTest.styles.css" asp-append-version="true" />
+    <link rel="icon" type="image/png" href="~/images/favicon.png" />
+<link rel="icon" type="image/png" href="~/images/favicon.png?v=2" />
+<link rel="icon" type="image/png" href="~/images/favicon.png" />
+<link rel="shortcut icon" href="~/images/favicon.ico" type="image/x-icon" />
+<link rel="apple-touch-icon" href="~/images/favicon.png" />
+
+
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark fixed-top custom-navbar">
+            <div class="container">
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                    <img src="https://www.sadiclarsan.com.tr/wp-content/uploads/2024/03/sadiclarsanlogo_Calisma-Yuzeyi-1-1536x492.jpg" alt="Sadıçlarsan" class="navbar-logo" />
+                </a>
+                
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">
+                                <i class="fas fa-home me-1"></i>Ana Sayfa
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#istatistikler">
+                                <i class="fas fa-chart-line me-1"></i>Başarılarımız
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#vision">
+                                <i class="fas fa-eye me-1"></i>Vizyonumuz
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#iletisim">
+                                <i class="fas fa-envelope me-1"></i>İletişim
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link btn btn-warning text-dark px-3 ms-2" href="#iletisim">
+                                <i class="fas fa-phone me-1"></i>Teklif Al
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container-fluid p-0">
+        <main role="main">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted bg-dark text-white py-4 mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <h5 class="fw-bold mb-3">
+                        <i class="fas fa-wind me-2"></i>SADIÇLARSAN
+                    </h5>
+                    <p>Endüstriyel mutfaklarda havalandırma ve filtreleme çözümleri konusunda 2000 yılından beri güvenilir hizmet sunuyoruz.</p>
+                    <div class="social-links">
+                        <a href="https://facebook.com/sadiclarsan" target="_blank" class="text-white me-3" title="Facebook">
+                            <i class="fab fa-facebook-f fa-lg"></i>
+                        </a>
+                        <a href="https://twitter.com/sadiclarsan" target="_blank" class="text-white me-3" title="Twitter">
+                            <i class="fab fa-twitter fa-lg"></i>
+                        </a>
+                        <a href="https://instagram.com/sadiclarsan" target="_blank" class="text-white me-3" title="Instagram">
+                            <i class="fab fa-instagram fa-lg"></i>
+                        </a>
+                        <a href="https://linkedin.com/company/sadiclarsan" target="_blank" class="text-white me-3" title="LinkedIn">
+                            <i class="fab fa-linkedin-in fa-lg"></i>
+                        </a>
+                        <a href="https://youtube.com/c/sadiclarsan" target="_blank" class="text-white" title="YouTube">
+                            <i class="fab fa-youtube fa-lg"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <h5 class="fw-bold mb-3">Hızlı Linkler</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-white-50 text-decoration-none">Ana Sayfa</a></li>
+                        <li><a href="#istatistikler" class="text-white-50 text-decoration-none">Başarılarımız</a></li>
+                        <li><a href="#iletisim" class="text-white-50 text-decoration-none">İletişim</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <h5 class="fw-bold mb-3">İletişim Bilgileri</h5>
+                    <p class="mb-2">
+                        <i class="fas fa-map-marker-alt me-2"></i>İstanbul, Türkiye
+                    </p>
+                    <p class="mb-2">
+                        <i class="fas fa-phone me-2"></i>
+                        <a href="tel:+905551234567" class="text-white-50 text-decoration-none">+90 555 123 45 67</a>
+                    </p>
+                    <p class="mb-2">
+                        <i class="fas fa-envelope me-2"></i>
+                        <a href="mailto:info@sadiclarsan.com" class="text-white-50 text-decoration-none">info@sadiclarsan.com</a>
+                    </p>
+                </div>
+            </div>
+            <hr class="my-4">
+            <div class="row">
+                <div class="col-md-6">
+                    <p class="mb-0">&copy; 2024 Sadıçlarsan. Tüm hakları saklıdır.</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <p class="mb-0">Güvenilir • Kaliteli • Profesyonel</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

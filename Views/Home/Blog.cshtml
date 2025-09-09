@@ -1,0 +1,51 @@
+@model SadiclarasanWeb.Models.BlogPost
+@{
+    ViewData["Title"] = Model.SeoTitle ?? Model.Title;
+}
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    @await Html.PartialAsync("_SeoHead")
+    <link rel="stylesheet" href="~/css/custom.css" asp-append-version="true" />
+    <script type="application/ld+json">
+    {
+      "@@context": "https://schema.org",
+      "@@type": "Article",
+      "headline": "@Model.Title",
+      "image": ["@(string.IsNullOrWhiteSpace(Model.OgImage) ? Model.ImageUrl : Model.OgImage)"],
+      "author": {
+        "@@type": "Person",
+        "name": "@(string.IsNullOrWhiteSpace(Model.Author) ? "Sadıçlarsan" : Model.Author)"
+      },
+      "datePublished": "@Model.CreatedDate.ToString("yyyy-MM-ddTHH:mm:ssK")",
+      "dateModified": "@((Model.UpdatedDate ?? Model.CreatedDate).ToString("yyyy-MM-ddTHH:mm:ssK"))"
+    }
+    </script>
+</head>
+<body>
+    <div class="container my-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-9">
+                <article class="blog-content">
+                    <header class="mb-4">
+                        <h1>@Model.Title</h1>
+                        <small class="text-muted">
+                            @Model.Author • @Model.CreatedDate.ToString("dd.MM.yyyy") • @Model.ViewCount görüntülenme
+                        </small>
+                    </header>
+                    @if (!string.IsNullOrEmpty(Model.ImageUrl))
+                    {
+                        <img src="@Model.ImageUrl" class="img-fluid rounded mb-4" alt="@Model.Title" />
+                    }
+                    <div class="blog-content">
+                        @Html.Raw(Model.Content)
+                    </div>
+                </article>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

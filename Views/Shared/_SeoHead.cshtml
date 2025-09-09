@@ -1,0 +1,74 @@
+@{
+    var seoSettings = ViewBag.SeoSettings as SadiclarasanWeb.Models.SeoSettings;
+    var defaultTitle = "Sadıçlarsan | Endüstriyel Mutfak Havalandırma ve Filtreleme Çözümleri";
+    var defaultDescription = "Sadıçlarsan, endüstriyel mutfaklarda havalandırma ve filtreleme çözümleri sunar.";
+    var defaultKeywords = "endüstriyel mutfak, havalandırma, filtreleme, HVAC, Sadiçlarsan";
+    var defaultSiteUrl = "https://www.sadiclarsan.com.tr";
+    var defaultOgImage = "https://www.sadiclarsan.com.tr/images/og-image.jpg";
+
+    var siteUrl = string.IsNullOrWhiteSpace(seoSettings?.SiteUrl) ? defaultSiteUrl : seoSettings.SiteUrl!;
+    var ogImage = string.IsNullOrWhiteSpace(seoSettings?.OgImage) ? defaultOgImage : seoSettings.OgImage!;
+    var baseTitle = string.IsNullOrWhiteSpace(seoSettings?.SiteTitle) ? defaultTitle : seoSettings.SiteTitle!;
+    var description = (ViewData["Description"] as string) ?? (ViewBag.OverrideDescription as string) ?? (string.IsNullOrWhiteSpace(seoSettings?.SiteDescription) ? defaultDescription : seoSettings.SiteDescription!);
+    var keywords = ViewBag.OverrideKeywords as string ?? (string.IsNullOrWhiteSpace(seoSettings?.SiteKeywords) ? defaultKeywords : seoSettings.SiteKeywords!);
+    var twitterCard = string.IsNullOrWhiteSpace(seoSettings?.TwitterCard) ? "summary_large_image" : seoSettings.TwitterCard!;
+
+    var pageTitle = (ViewData["Title"] as string);
+    var titleTag = string.IsNullOrWhiteSpace(pageTitle) ? baseTitle : $"{pageTitle} - Sadıçlarsan";
+
+    var requestPath = Context?.Request?.Path.Value ?? "/";
+    var host = Context?.Request?.Host.Value ?? string.Empty;
+    var scheme = Context?.Request?.Scheme ?? "https";
+    var canonical = host.Contains("sadiclarsan.com.tr", StringComparison.OrdinalIgnoreCase)
+        ? $"{scheme}://{host}{requestPath}"
+        : siteUrl.TrimEnd('/') + requestPath;
+}
+
+<title>@titleTag</title>
+<meta name="description" content="@description">
+<meta name="keywords" content="@keywords">
+<meta name="author" content="Sadıçlarsan">
+<link rel="canonical" href="@canonical">
+
+<meta property="og:title" content="@titleTag">
+<meta property="og:description" content="@description">
+<meta property="og:type" content="website">
+<meta property="og:url" content="@canonical">
+<meta property="og:image" content="@((ViewBag.OverrideOgImage as string) ?? ogImage)">
+<meta property="og:site_name" content="Sadıçlarsan">
+
+<meta name="twitter:card" content="@twitterCard">
+<meta name="twitter:title" content="@titleTag">
+<meta name="twitter:description" content="@description">
+<meta name="twitter:image" content="@ogImage">
+
+@if (!string.IsNullOrWhiteSpace(seoSettings?.GoogleAnalyticsId))
+{
+    <script async src="https://www.googletagmanager.com/gtag/js?id=@seoSettings.GoogleAnalyticsId"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);} 
+        gtag('js', new Date());
+        gtag('config', '@seoSettings.GoogleAnalyticsId');
+    </script>
+}
+
+@if (!string.IsNullOrWhiteSpace(seoSettings?.GoogleSearchConsole))
+{
+    <meta name="google-site-verification" content="@seoSettings.GoogleSearchConsole.Replace("google-site-verification=", string.Empty)" />
+}
+
+<script type="application/ld+json">
+{
+  "@@context": "https://schema.org",
+  "@@type": "Organization",
+  "name": "Sadıçlarsan Air",
+  "url": "@siteUrl",
+  "logo": "@ogImage",
+  "sameAs": [
+    "https://www.facebook.com/sadiclarsan27/",
+    "https://www.instagram.com/sadiclarsanairteknolojimakina/",
+    "https://www.youtube.com/@@SADI%C3%87LARSANA%C4%B0RTEKNOLOJ%C4%B0"
+  ]
+}
+</script>

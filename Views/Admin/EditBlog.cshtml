@@ -1,0 +1,213 @@
+@model BlogPost
+@{
+    ViewData["Title"] = "Blog Düzenle";
+    Layout = "_AdminLayout";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Blog Düzenle</h2>
+    <div>
+        <a href="@Url.Action("BlogDetail", "Home", new { id = Model.Id })" 
+           class="btn btn-outline-info me-2" target="_blank">
+            <i class="fas fa-eye me-2"></i>Görüntüle
+        </a>
+        <a href="@Url.Action("BlogList", "Admin")" class="btn btn-secondary">
+            <i class="fas fa-arrow-left me-2"></i>Geri Dön
+        </a>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <form asp-action="EditBlog" method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
+            <input asp-for="Id" type="hidden">
+            <input asp-for="CreatedDate" type="hidden">
+            <input asp-for="ViewCount" type="hidden">
+            
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="mb-3">
+                        <label asp-for="Title" class="form-label">Başlık *</label>
+                        <input asp-for="Title" class="form-control" required>
+                        <span asp-validation-for="Title" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="SeoUrl" class="form-label">SEO URL</label>
+                        <input asp-for="SeoUrl" class="form-control" placeholder="ornek-baslik">
+                        <div class="form-text">Boş bırakırsanız başlıktan otomatik oluşturulur; benzersiz yapılır.</div>
+                        <span asp-validation-for="SeoUrl" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Summary" class="form-label">Özet</label>
+                        <textarea asp-for="Summary" class="form-control" rows="3" 
+                                  placeholder="Blog yazısının kısa özeti (isteğe bağlı)"></textarea>
+                        <span asp-validation-for="Summary" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Content" class="form-label">İçerik *</label>
+                        <textarea asp-for="Content" class="form-control" rows="15" required 
+                                  placeholder="Blog yazısının detaylı içeriği..."></textarea>
+                        <span asp-validation-for="Content" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="SeoTitle" class="form-label">SEO Başlığı</label>
+                        <input asp-for="SeoTitle" class="form-control">
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="MetaDescription" class="form-label">Meta Açıklama</label>
+                        <textarea asp-for="MetaDescription" class="form-control" rows="3"></textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="MetaKeywords" class="form-label">Meta Anahtar Kelimeler</label>
+                        <input asp-for="MetaKeywords" class="form-control">
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Tags" class="form-label">Etiketler</label>
+                        <input asp-for="Tags" class="form-control" 
+                               placeholder="havalandırma, filtreleme, endüstriyel (virgülle ayırın)">
+                        <div class="form-text">Etiketleri virgülle ayırarak yazın</div>
+                        <span asp-validation-for="Tags" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="mb-3">
+                        <label for="imageFile" class="form-label">Blog Resmi</label>
+                        <input type="file" class="form-control" id="imageFile" name="imageFile" 
+                               accept="image/*" onchange="previewImage(this)">
+                        <div class="form-text">Yeni resim yüklemek için seçin (isteğe bağlı)</div>
+                    </div>
+
+                    @if (!string.IsNullOrEmpty(Model.ImageUrl))
+                    {
+                        <div class="mb-3">
+                            <label class="form-label">Mevcut Resim:</label>
+                            <div>
+                                <img src="@Model.ImageUrl" class="img-fluid rounded" 
+                                     style="max-height: 200px;" id="currentImage">
+                            </div>
+                        </div>
+                    }
+
+                    <div class="mb-3">
+                        <div id="imagePreview" class="d-none">
+                            <label class="form-label">Yeni Resim Önizleme:</label>
+                            <img id="preview" class="img-fluid rounded" style="max-height: 200px;">
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input asp-for="IsActive" class="form-check-input" type="checkbox">
+                            <label asp-for="IsActive" class="form-check-label">
+                                Aktif (Yayında)
+                            </label>
+                        </div>
+                        <div class="form-text">İşaretlenirse blog yazısı yayında kalır</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <small class="text-muted">
+                            <strong>Oluşturulma:</strong> @Model.CreatedDate.ToString("dd.MM.yyyy HH:mm")<br>
+                            @if (Model.UpdatedDate.HasValue)
+                            {
+                                <strong>Son Güncelleme:</strong> @Model.UpdatedDate.Value.ToString("dd.MM.yyyy HH:mm")<br>
+                            }
+                            <strong>Görüntülenme:</strong> @Model.ViewCount
+                        </small>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-success btn-lg">
+                            <i class="fas fa-save me-2"></i>Güncelle
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary" onclick="previewContent()">
+                            <i class="fas fa-eye me-2"></i>Önizleme
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Preview Modal -->
+<div class="modal fade" id="previewModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Blog Önizleme</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div id="previewContent"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function previewImage(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('preview').src = e.target.result;
+                    document.getElementById('imagePreview').classList.remove('d-none');
+                    
+                    // Mevcut resmi gizle
+                    const currentImage = document.getElementById('currentImage');
+                    if (currentImage) {
+                        currentImage.style.opacity = '0.5';
+                    }
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function previewContent() {
+            const title = document.getElementById('Title').value;
+            const summary = document.getElementById('Summary').value;
+            const content = document.getElementById('Content').value;
+            const tags = document.getElementById('Tags').value;
+            
+            let previewHtml = `
+                <h2>${title || 'Blog Başlığı'}</h2>
+                ${summary ? `<p class="lead">${summary}</p>` : ''}
+                <hr>
+                <div>${content.replace(/\n/g, '<br>') || 'Blog içeriği buraya gelecek...'}</div>
+                ${tags ? `<hr><p><strong>Etiketler:</strong> ${tags.split(',').map(tag => `<span class="badge bg-primary me-1">${tag.trim()}</span>`).join('')}</p>` : ''}
+            `;
+            
+            document.getElementById('previewContent').innerHTML = previewHtml;
+            new bootstrap.Modal(document.getElementById('previewModal')).show();
+        }
+
+        // Form validation
+        (function() {
+            'use strict';
+            window.addEventListener('load', function() {
+                var forms = document.getElementsByClassName('needs-validation');
+                var validation = Array.prototype.filter.call(forms, function(form) {
+                    form.addEventListener('submit', function(event) {
+                        if (form.checkValidity() === false) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                        }
+                        form.classList.add('was-validated');
+                    }, false);
+                });
+            }, false);
+        })();
+    </script>
+}

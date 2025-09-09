@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://www.sadiclarsan.com.tr/sitemap.xml
